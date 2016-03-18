@@ -1,0 +1,43 @@
+{
+  "name": "yang-cc",
+  "version": "1.0.0",
+  "description": "YANG model-driven application core composer (ycc)",
+  "keywords": [
+    "core",
+    "yang",
+    "yaml",
+    "json",
+    "compose",
+    "translate",
+    "package",
+    "ycc"
+  ],
+  "preferGlobal": true,
+  "author": "Peter Lee <peter@corenova.com>",
+  "homepage": "https://github.com/saintkepha/yang-cc",
+  "license": "Apache-2.0",
+  "repository": "saintkepha/yang-cc",
+  "main": "lib/index.js",
+  "bin": {
+    "ycc": "bin/ycc"
+  },
+  "dependencies": {
+    "minimist": "^1.2.0",
+    "tosource": "^1.0.0",
+    "yang-js": "^0.12.21"
+  },
+  "bundleDependencies": [
+    "minimist",
+    "tosource"
+  ],
+  "devDependencies": {
+    "mocha": "~2.0.1",
+    "should": "~3.1.3"
+  },
+  "engines": {
+    "node": ">=0.10.28"
+  },
+  "scripts": {
+    "prepublish": "coffee -o lib -c src"
+  }
+}

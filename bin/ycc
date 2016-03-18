@@ -1,0 +1,6 @@
+#!/usr/bin/env node
+
+# 'composer' is a built-in core
+var core = require('..').load('composer')
+core.enable('cli', core.access('yangforge'), process.argv)
+core.run()
