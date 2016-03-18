@@ -10,29 +10,42 @@ class Composer extends yang.Yin
   # it defaults to adopting the 'yang' instance as its parent for
   # symbol resolution
   constructor: (@parent=yang) ->
-    super
-    @config =
-      basedir: __dirname
-    @includes = new SearchPath @config.basedir, [ 'yaml', 'yml', 'yang' ]
-    @links    = new SearchPath @config.basedir, [ 'js', 'coffee' ]
-
-  set: (obj={}) -> @config[k] = v for k, v of obj; return this
+    super @parent
+    @includes = new SearchPath __dirname, [ 'yaml', 'yml', 'yang' ]
+    @links    = new SearchPath __dirname, [ 'js', 'coffee' ]
+    if @parent instanceof Composer
+      @includes.add @parent.includes...
+      @links.add @parent.links...
 
   # register spec/schema search directories (exists)
-  include: -> @includes.base(@config.basedir).add arguments...; return this
+  include: ->
+    @includes
+      .base @resolve 'basedir'
+      .add ([].concat arguments...)
+    return this
 
   # register feature search directories (exists)
-  link: -> @links.base(@config.basedir).add arguments...; return this
+  link: ->
+    @links
+      .base @resolve 'basedir'
+      .add ([].concat arguments...)
+    return this
 
-  compose: (files...) -> @load (@includes.fetch files...)...
+  compose: ->
+    @load (@includes.fetch ([].concat arguments...))...
 
   resolve: (type, key, opts={}) ->
     match = super
     match ?= switch
-      when not key? then @use (@includes.fetch type)...; super
+      when not key?
+        @use (@includes.fetch type)...
+        super type, key, recurse: false
       when type is 'feature'
-        feature = (@links.locate key)[0]
-        require feature if feature?
+        loc = (@links.locate key)[0]
+        @set type, key, switch
+          when loc? then require loc
+          else {}
+        super type, key, recurse: false
     return match
 
 module.exports = Composer

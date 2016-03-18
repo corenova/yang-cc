@@ -9,9 +9,11 @@ class SearchPath extends Array
   exists: (paths, opts={}) ->
     opts.basedir ?= @basedir
     paths
+      .filter (f) -> (typeof f is 'string') and !!f
       .map (f) -> path.resolve opts.basedir, f
       .filter (f) ->
-        stat = fs.statSync f
+        try stat = fs.statSync f
+        catch
         switch
           when not stat? then false
           when opts.isDirectory then stat.isDirectory()
@@ -22,22 +24,26 @@ class SearchPath extends Array
   base: (path=@basedir) -> @basedir = path; this
 
   # TODO: optimize to remove duplicates
-  add: (paths...) ->
-    @unshift (@exists paths, isDirectory: true)...
+  add: ->
+    @unshift (@exists ([].concat arguments...), isDirectory: true)...
 
-  locate: (files...) ->
-    files = files.reduce ((a,b) ->
-      a.push b
-      if !!(path.extname file)
-        a.push "#{file}.#{ext}" for ext in @exts
-    ), []
-
+  locate: ->
+    files =
+      ([].concat arguments...)
+        .filter (x) -> x? and !!x
+        .reduce ((a,b) =>
+          a.push b
+          if not !!(path.extname b)
+            a.push "#{b}.#{ext}" for ext in @exts
+          return a
+        ), []
     res = []
-    @forEach (dir) ->
+    @forEach (dir) =>
+      #console.log "checking #{dir} for #{files}"
       res.push (@exists (files.map (f) -> path.resolve dir, f), isFile: true)...
     return res
 
-  fetch: (files...) ->
-    (@locate files...).map (f) -> fs.readFileSync f, 'utf-8'
+  fetch: ->
+    (@locate ([].concat arguments...)).map (f) -> fs.readFileSync f, 'utf-8'
 
 module.exports = SearchPath

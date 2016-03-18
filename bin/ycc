@@ -1,6 +1,16 @@
 #!/usr/bin/env node
 
-# 'composer' is a built-in core
-var core = require('..').load('composer')
-core.enable('cli', core.access('yangforge'), process.argv)
-core.run()
+var argv = require('minimist')(process.argv.slice(2), { 
+  alias: {
+    include: 'I',
+	link: 'L',
+	output: 'o'
+  }
+});
+var cwd = process.cwd()
+require('..')
+  .set({ basedir: cwd })
+  .include(cwd, argv.include)
+  .link(cwd, argv.link)
+  .compose(argv._)
+  
