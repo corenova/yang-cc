@@ -3,19 +3,20 @@
 # composes local file assets into a generated output
 
 yang = require 'yang-js'
+Core = require './core'
 SearchPath = require './search-path'
 
 class Composer extends yang.Yin
 
-  # it defaults to adopting the 'yang' instance as its parent for
-  # symbol resolution
-  constructor: (@parent=yang) ->
-    super @parent
+  # it defaults to adopting the 'yang' instance as its origin for
+  # symbolic resolution
+  constructor: (@origin=yang) ->
+    super @origin
     @includes = new SearchPath __dirname, [ 'yaml', 'yml', 'yang' ]
     @links    = new SearchPath __dirname, [ 'js', 'coffee' ]
-    if @parent instanceof Composer
-      @includes.add @parent.includes...
-      @links.add @parent.links...
+    if @origin instanceof Composer
+      @includes.add @origin.includes...
+      @links.add @origin.links...
 
   # register spec/schema search directories (exists)
   include: ->
@@ -31,8 +32,18 @@ class Composer extends yang.Yin
       .add ([].concat arguments...)
     return this
 
+  # accepts: schema/spec file locations
+  # returns: a new Core object
   compose: ->
-    @load (@includes.fetch ([].concat arguments...))...
+    @load (@includes.fetch ([].concat arguments...))
+
+  ## OVERRIDES
+
+  # accepts: schema/spec objects and strings
+  # returns: a new Core object
+  load: ->
+    res = (new Composer this).use ([].concat arguments...)
+    new Core res
 
   resolve: (type, key, opts={}) ->
     match = super

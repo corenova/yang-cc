@@ -7,3 +7,4 @@ Composer = require './composer'
 #
 exports = module.exports = (new Composer).include '../standard'
 exports.Composer = Composer
+exports.Core = require './core'

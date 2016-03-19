@@ -8,9 +8,10 @@ var argv = require('minimist')(process.argv.slice(2), {
   }
 });
 var cwd = process.cwd()
-require('..')
+var core = require('..')
   .set({ basedir: cwd })
   .include(cwd, argv.include)
   .link(cwd, argv.link)
   .compose(argv._)
-  
+
+core.dump(argv);
