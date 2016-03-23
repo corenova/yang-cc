@@ -24,7 +24,7 @@
   "dependencies": {
     "minimist": "^1.2.0",
     "search-path": "^1.0.3",
-    "yang-js": "^0.12.27"
+    "yang-js": "^0.12.28"
   },
   "devDependencies": {
     "mocha": "~2.0.1",
