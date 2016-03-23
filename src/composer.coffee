@@ -14,7 +14,7 @@ class Composer extends yang.Yin
     super origin
     # TODO: prevent pulling the entire 'extension' obj into current @map
     @define 'extension',
-      compose:
+      composition:
         type:      '1'
         reference: '1'
         preprocess: (arg, params, ctx) ->
