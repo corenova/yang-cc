@@ -18,9 +18,9 @@ class Core extends yang.Yang
     res = super
     res = (new Buffer res).toString 'base64'
     res = """
-    composition {
+    compose {
       type #{opts.format};
-      default \"#{res}\";
+      reference \"#{res}\";
     }
     """
     if typeof opts.output is 'string'

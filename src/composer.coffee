@@ -12,12 +12,13 @@ class Composer extends yang.Yin
   # symbolic resolution
   constructor: (origin=yang) ->
     super origin
+    # TODO: prevent pulling the entire 'extension' obj into current @map
     @define 'extension',
-      composition:
-        type:    '1'
-        default: '1'
+      compose:
+        type:      '1'
+        reference: '1'
         preprocess: (arg, params, ctx) ->
-          data = (new Buffer params.default, 'base64').toString 'binary'
+          data = (new Buffer params.reference, 'base64').toString 'binary'
           ctx[k] = v for k, v of (yang.parse data)
 
     @includes = new SearchPath basedir: __dirname, exts: [ 'yaml', 'yml', 'yang' ]
@@ -50,7 +51,10 @@ class Composer extends yang.Yin
   # accepts: core/schema/spec objects and strings
   # returns: a new Core object
   load: ->
-    res = (new Composer this).use ([].concat arguments...)
+    input = [].concat arguments...
+    unless input.length > 0
+      throw @error "no input schema(s) to load"
+    res = (new Composer this).use input
     new Core res.map
 
   # extends resolve to attempt to generate missing symbols

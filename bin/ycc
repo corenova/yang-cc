@@ -1,12 +1,26 @@
 #!/usr/bin/env node
 
-var argv = require('minimist')(process.argv.slice(2), { 
+var argv = require('minimist')(process.argv.slice(2), {
+  boolean: [ 'help' ],
   alias: {
+    help: 'h',
     include: 'I',
 	link: 'L',
 	output: 'o'
   }
 });
+
+if (argv.h === true) {
+  var help;
+  help  = "  Usage: ycc [options] file...\n\n";
+  help += "  Options:\n";
+  help += "    -I, --include [dir...]  Add directory to compiler search path\n";
+  help += "    -L, --link [dir...]     Add directory to linker search path\n";
+  help += "    -o, --output <file>     Place output into <file>\n";
+  console.info(help);
+  process.exit();
+}
+
 var cwd = process.cwd()
 var core = require('..')
   .set({ basedir: cwd })
