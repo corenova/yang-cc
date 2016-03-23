@@ -58,16 +58,25 @@ class Composer extends yang.Yin
     new Core res.map
 
   # extends resolve to attempt to generate missing symbols
-  resolve: (type, key, opts={}) ->
-    match = super
+  resolve: (keys..., opts={}) ->
+    unless opts instanceof Object
+      keys.push opts
+      opts = {}
+    return unless keys.length > 0
+
+    match = super keys..., warn: false
     match ?= switch
-      when not key?
-        @use (@includes.fetch type)...
-        super type, key, recurse: false
-      when type is 'feature'
-        loc = (@links.resolve key)[0]
+      when keys.length is 1
+        @use (@includes.fetch keys[0])...
+        super keys[0], recurse: false
+      when keys[0] in [ 'feature', 'rpc' ]
+        [ type, key ] = keys
+        loc = (@links.resolve "#{type}/#{key}")[0]
         @set type, key, switch
-          when loc? then require loc
+          when loc?
+            res = require loc
+            res.__origin__ = loc
+            res
           else {}
         super type, key, recurse: false
     return match
