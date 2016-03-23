@@ -1,10 +1,9 @@
 # core - the embodiment of the soul of the application
-console.debug ?= console.log if process.env.yang_debug?
 
 yang     = require 'yang-js'
 events   = require 'events'
 assert   = require 'assert'
-tosource = require 'tosource'
+fs       = require 'fs'
 
 class Core extends yang.Yang
   @mixin events.EventEmitter
@@ -13,7 +12,22 @@ class Core extends yang.Yang
     @invoke 'main', arguments...
 
   dump: (opts={}) ->
-    console.log @origin.toString()
+    # force opts defaults (for now)
+    opts.format = 'binary'
+
+    res = super
+    res = (new Buffer res).toString 'base64'
+    res = """
+    composition {
+      type #{opts.format};
+      default \"#{res}\";
+    }
+    """
+    if typeof opts.output is 'string'
+      fs.writeFile opts.output, res, 'utf8'
+    else
+      console.info res
+    return res
 
   ## OVERRIDES
 

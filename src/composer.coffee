@@ -4,47 +4,56 @@
 
 yang = require 'yang-js'
 Core = require './core'
-SearchPath = require './search-path'
+SearchPath = require 'search-path'
 
 class Composer extends yang.Yin
 
   # it defaults to adopting the 'yang' instance as its origin for
   # symbolic resolution
-  constructor: (@origin=yang) ->
-    super @origin
-    @includes = new SearchPath __dirname, [ 'yaml', 'yml', 'yang' ]
-    @links    = new SearchPath __dirname, [ 'js', 'coffee' ]
-    if @origin instanceof Composer
-      @includes.add @origin.includes...
-      @links.add @origin.links...
+  constructor: (origin=yang) ->
+    super origin
+    @define 'extension',
+      composition:
+        type:    '1'
+        default: '1'
+        preprocess: (arg, params, ctx) ->
+          data = (new Buffer params.default, 'base64').toString 'binary'
+          ctx[k] = v for k, v of (yang.parse data)
+
+    @includes = new SearchPath basedir: __dirname, exts: [ 'yaml', 'yml', 'yang' ]
+    @links    = new SearchPath basedir: __dirname, exts: [ 'js', 'coffee' ]
+    if origin instanceof Composer
+      @includes.include origin.includes...
+      @links.include origin.links...
 
   # register spec/schema search directories (exists)
   include: ->
     @includes
-      .base @resolve 'basedir'
-      .add ([].concat arguments...)
+      .base @resolve 'basedir', warn: false
+      .include ([].concat arguments...)
     return this
 
   # register feature search directories (exists)
   link: ->
     @links
-      .base @resolve 'basedir'
-      .add ([].concat arguments...)
+      .base @resolve 'basedir', warn: false
+      .include ([].concat arguments...)
     return this
 
-  # accepts: schema/spec file locations
+  # accepts: core/schema/spec file locations
   # returns: a new Core object
   compose: ->
     @load (@includes.fetch ([].concat arguments...))
 
   ## OVERRIDES
 
-  # accepts: schema/spec objects and strings
+  # accepts: core/schema/spec objects and strings
   # returns: a new Core object
   load: ->
     res = (new Composer this).use ([].concat arguments...)
-    new Core res
+    new Core res.map
 
+  # extends resolve to attempt to generate missing symbols
   resolve: (type, key, opts={}) ->
     match = super
     match ?= switch
@@ -52,7 +61,7 @@ class Composer extends yang.Yin
         @use (@includes.fetch type)...
         super type, key, recurse: false
       when type is 'feature'
-        loc = (@links.locate key)[0]
+        loc = (@links.resolve key)[0]
         @set type, key, switch
           when loc? then require loc
           else {}
