@@ -54,8 +54,7 @@ class Composer extends yang.Yin
     input = [].concat arguments...
     unless input.length > 0
       throw @error "no input schema(s) to load"
-    res = (new Composer this).use input
-    new Core res.map
+    new Core ((new Composer this).use input)
 
   # extends resolve to attempt to generate missing symbols
   resolve: (keys..., opts={}) ->

@@ -8,8 +8,20 @@ fs       = require 'fs'
 class Core extends yang.Yang
   @mixin events.EventEmitter
 
-  run: ->
-    @invoke 'main', arguments...
+  constructor: -> @runtime = {}; super
+
+  merge: ->
+    modules = ([].concat arguments...).map (core) =>
+      core = @origin.load core unless core instanceof Core
+      @attach k, v for k, v of core.properties # how about methods?
+      Object.keys core.properties
+    [].concat modules...
+
+  run: (feature, args...) ->
+    f = @origin.resolve 'feature', feature
+    @invoke f, args...
+    .then (res) => @runtime[feature] = res
+    .catch (err) -> console.error err
 
   dump: (opts={}) ->
     # force opts defaults (for now)
@@ -30,18 +42,6 @@ class Core extends yang.Yang
     return res
 
   ## OVERRIDES
-
   attach: -> super; @emit 'attach', arguments...
-
-  enable: (feature, data, args...) ->
-    Feature = @origin.resolve 'feature', feature
-    assert Feature instanceof Function,
-      "cannot enable incompatible feature"
-
-    @once 'start', (engine) =>
-      console.debug? "[Core:enable] starting with '#{feature}'"
-      (new Feature data, this).invoke 'main', args...
-      .then (res) -> console.log res
-      .catch (err) -> console.error err
 
 module.exports = Core
