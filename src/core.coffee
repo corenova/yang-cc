@@ -7,8 +7,6 @@ assert = require 'assert'
 class Core extends yang.Yang
   @mixin events.EventEmitter
 
-  constructor: -> @runtime = {}; super
-
   merge: ->
     modules = ([].concat arguments...).map (core) =>
       core = @origin.load core unless core instanceof Core
@@ -17,10 +15,10 @@ class Core extends yang.Yang
     [].concat modules...
 
   run: (feature, args...) ->
-    f = @origin.resolve 'feature', feature
-    @invoke f, args...
-    .then (res) => @runtime[feature] = res
-    .catch (err) -> console.error err
+    f = (@origin.resolve 'feature', feature)?.bind this
+    @[feature] =
+      @invoke ((x..., y) -> y f x...), args...
+      .catch (err) -> console.error err
 
   dump: (opts={}) ->
     # force opts defaults (for now)
