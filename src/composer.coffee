@@ -68,9 +68,9 @@ class Composer extends yang.Yin
       when keys.length is 1
         @use (@includes.fetch keys[0])...
         super keys[0], recurse: false
-      when keys[0] in [ 'feature', 'rpc' ]
+      when keys[0] in [ 'feature', 'rpc' ] and opts.module?
         [ type, key ] = keys
-        loc = (@links.resolve "#{type}/#{key}")[0]
+        loc = (@links.resolve "#{opts.module}/#{type}/#{key}")[0]
         @set type, key, switch
           when loc?
             res = require loc

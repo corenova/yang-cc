@@ -1,15 +1,18 @@
 {
   "name": "yang-cc",
-  "version": "1.0.6",
-  "description": "YANG model-driven application core composer (ycc)",
+  "version": "1.0.7",
+  "description": "YANG model-driven application core composer - ycc",
   "keywords": [
     "core",
     "yang",
     "yaml",
-    "json",
     "compose",
-    "translate",
-    "package",
+    "load",
+    "search",
+    "files",
+    "schema",
+    "specification",
+    "yang-js",
     "ycc"
   ],
   "preferGlobal": true,
@@ -23,7 +26,7 @@
   },
   "dependencies": {
     "minimist": "^1.2.0",
-    "search-path": "^1.0.3",
+    "search-path": "^1.0.4",
     "yang-js": "^0.12.32"
   },
   "devDependencies": {
