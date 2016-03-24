@@ -1,9 +1,8 @@
 # core - the embodiment of the soul of the application
 
-yang     = require 'yang-js'
-events   = require 'events'
-assert   = require 'assert'
-fs       = require 'fs'
+yang   = require 'yang-js'
+events = require 'events'
+assert = require 'assert'
 
 class Core extends yang.Yang
   @mixin events.EventEmitter
@@ -26,20 +25,14 @@ class Core extends yang.Yang
   dump: (opts={}) ->
     # force opts defaults (for now)
     opts.format = 'binary'
-
     res = super
     res = (new Buffer res).toString 'base64'
-    res = """
+    """
     composition {
       type #{opts.format};
       reference \"#{res}\";
     }
     """
-    if typeof opts.output is 'string'
-      fs.writeFile opts.output, res, 'utf8'
-    else
-      console.info res
-    return res
 
   ## OVERRIDES
   attach: -> super; @emit 'attach', arguments...

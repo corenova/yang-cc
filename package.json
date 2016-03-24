@@ -14,9 +14,9 @@
   ],
   "preferGlobal": true,
   "author": "Peter Lee <peter@corenova.com>",
-  "homepage": "https://github.com/saintkepha/yang-cc",
+  "homepage": "https://github.com/corenova/yang-cc",
   "license": "Apache-2.0",
-  "repository": "saintkepha/yang-cc",
+  "repository": "corenova/yang-cc",
   "main": "lib/index.js",
   "bin": {
     "ycc": "bin/ycc"

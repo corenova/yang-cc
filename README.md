@@ -28,13 +28,13 @@ You must have `node >= 0.10.28` as a minimum requirement to use
 `yang-cc`.
 
 ## Usage
-```
-  Usage: ycc [options] file...
+```bash
+Usage: ycc [options] file...
 
-  Options:
-    -I, --include [dir...]  Add directory to compiler search path
-    -L, --link [dir...]     Add directory to linker search path
-    -o, --output <file>     Place output into <file>
+Options:
+  -I, --include [dir...]  Add directory to compiler search path
+  -L, --link [dir...]     Add directory to linker search path
+  -o, --output <file>     Place output into <file>
 ```
 
 ## License

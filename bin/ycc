@@ -28,4 +28,9 @@ var core = require('..')
   .link(cwd, argv.link)
   .compose(argv._)
 
-core.dump(argv);
+var output = core.dump(argv)
+if (argv.o != null) {
+  require('fs').writeFile(argv.o, output, 'utf8');
+} else {
+  console.info(output);
+}
