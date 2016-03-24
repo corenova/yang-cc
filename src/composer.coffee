@@ -76,7 +76,9 @@ class Composer extends yang.Yin
             res = require loc
             res.__origin__ = loc
             res
-          else {}
+          else
+            console.debug? "unable to resolve '#{opts.module}/#{type}/#{key}'"
+            {}
         super type, key, recurse: false
     return match
 

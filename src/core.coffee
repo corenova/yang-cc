@@ -16,6 +16,9 @@ class Core extends yang.Yang
 
   run: (feature, args...) ->
     f = (@origin.resolve 'feature', feature)?.bind this
+    assert f?,
+      "cannot run with requested feature '#{feature}' (not found in the core)"
+
     @[feature] =
       @invoke ((x..., y) -> y f x...), args...
       .catch (err) -> console.error err

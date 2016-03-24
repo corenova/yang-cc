@@ -20,7 +20,10 @@ generated output can then be sent across the wire and *loaded* by
 another instance of the `Composer` to re-create the identical instance
 of the core.
 
-This software is brought to you by [Corenova](http://www.corenova.com).
+This software is brought to you by
+[Corenova](http://www.corenova.com).  We'd love to hear your feedback.
+Please feel free to reach me at <peter@corenova.com> anytime with
+questions, suggestions, etc.
 
 ## Installation
 ```bash
@@ -116,7 +119,7 @@ and `rpc create { ... }`, then during schema compilation, the
 - ./lib/foo/rpc/create.js
 - ./lib/foo/rpc/create.coffee
 
-Please note that it automatically *prepends* <module name>/<type> when
+Please note that it automatically *prepends* `<module name>/<type>` when
 attempting to locate the handler function file.  This is to ensure
 that discovered assets are *namespace* protected when associated
 during respective schema compilation.
