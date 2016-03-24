@@ -5,6 +5,7 @@ events = require 'events'
 assert = require 'assert'
 
 class Core extends yang.Yang
+  @set synth: 'core'
   @mixin events.EventEmitter
 
   merge: ->
@@ -18,10 +19,7 @@ class Core extends yang.Yang
     f = (@origin.resolve 'feature', feature)?.bind this
     assert f?,
       "cannot run with requested feature '#{feature}' (not found in the core)"
-
-    @[feature] =
-      @invoke ((x..., y) -> y f x...), args...
-      .catch (err) -> console.error err
+    @[feature] = f.apply this, args
 
   dump: (opts={}) ->
     # force opts defaults (for now)
@@ -34,6 +32,8 @@ class Core extends yang.Yang
       reference \"#{res}\";
     }
     """
+
+  serialize: -> @get()
 
   ## OVERRIDES
   attach: -> super; @emit 'attach', arguments...
