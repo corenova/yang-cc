@@ -35,7 +35,7 @@ class Core extends yang.Yang
     """
     composition {
       type #{opts.format};
-      reference \"#{res}\";
+      source \"#{res}\";
     }
     """
 

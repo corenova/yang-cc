@@ -15,11 +15,15 @@ class Composer extends yang.Yin
     # TODO: prevent pulling the entire 'extension' obj into current @map
     @define 'extension',
       composition:
-        type:      '1'
-        reference: '1'
+        type:   '1'
+        source: '1'
+        construct: (arg, params) -> params # pass-through wrapper
+      source:
+        argument: 'data'
         preprocess: (arg, params, ctx) ->
-          data = (new Buffer params.reference, 'base64').toString 'binary'
-          ctx[k] = v for k, v of (yang.parse data)
+          data = (new Buffer arg, 'base64').toString 'binary'
+          { schema } = yang.preprocess data, this
+          @copy ctx, schema
 
     @includes = new SearchPath basedir: __dirname, exts: [ 'yaml', 'yml', 'yang' ]
     @links    = new SearchPath basedir: __dirname, exts: [ 'js', 'coffee' ]

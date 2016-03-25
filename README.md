@@ -13,7 +13,7 @@ schema file(s) in the local filesystem.
   [![NPM Downloads][downloads-image]][downloads-url]
 
 The core composer produces a new YANG language extension output called
-`composition` which contains a `reference` to base64 encoded data with
+`composition` which contains a `source` to base64 encoded data with
 the generated results. It basically generates **portable** compiled
 output which contains one or more schema(s) and specification(s). The
 generated output can then be sent across the wire and *loaded* by
