@@ -9,8 +9,14 @@ class Core extends yang.Yang
   @mixin events.EventEmitter
 
   merge: ->
-    modules = ([].concat arguments...).map (core) =>
-      core = @origin.load core unless core instanceof Core
+    cores = ([].concat arguments...).map (core) =>
+      unless core instanceof Core
+        @origin.load core
+      else core
+    return [] unless cores.length > 0
+
+    @emit 'merge', cores...
+    modules = cores.map (core) =>
       @attach k, v for k, v of core.properties # how about methods?
       Object.keys core.properties
     [].concat modules...

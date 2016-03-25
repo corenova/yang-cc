@@ -65,9 +65,9 @@ class Composer extends yang.Yin
 
     match = super keys..., warn: false
     match ?= switch
-      when keys.length is 1
-        @use (@includes.fetch keys[0])...
-        super keys[0], recurse: false
+      when keys[0] is 'module'
+        @use (@includes.fetch keys[1])...
+        super keys..., recurse: false
       when keys[0] in [ 'feature', 'rpc' ] and opts.module?
         [ type, key ] = keys
         loc = (@links.resolve "#{opts.module}/#{type}/#{key}")[0]
@@ -79,7 +79,7 @@ class Composer extends yang.Yin
           else
             console.debug? "unable to resolve '#{opts.module}/#{type}/#{key}'"
             {}
-        super type, key, recurse: false
+        super keys..., recurse: false
     return match
 
 module.exports = Composer

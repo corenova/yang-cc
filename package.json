@@ -1,6 +1,6 @@
 {
   "name": "yang-cc",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "YANG model-driven application core composer - ycc",
   "keywords": [
     "core",
@@ -27,7 +27,7 @@
   "dependencies": {
     "minimist": "^1.2.0",
     "search-path": "^1.0.4",
-    "yang-js": "^0.12.36"
+    "yang-js": "^0.12.37"
   },
   "devDependencies": {
     "mocha": "~2.0.1",
