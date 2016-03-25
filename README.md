@@ -63,10 +63,47 @@ var core =
     .set({ basedir: __dirname })
     .include('./some-local-dir')
     .link('./other-local-dir')
-	.compose('foo.yang','bar.yang');
+    .compose('foo.yang','bar.yang');
 
 console.log(core.dump());
 ```
+
+### compose (file...)
+
+This is the **primary** method for passing in various *filenames* to
+the `Composer` for producing a newly compiled `Core` containing one or
+more *schemas* and *specifications* along with their **dependencies**.
+
+The ability to dynamically discover **dependencies** from the local
+filesystem search path is one of the key capabilities provided by the
+`yang-cc` module over the
+[yang-js](https://github.com/saintkepha/yang-js).
+
+By referencing various `include` directories prior to issuing the
+`compose` method, any *include* and *import* statements found within
+the schema(s) being composed will be dynamically located and if found,
+compiled and bundled as part of the resulting `Core`.
+
+For example, the `yang-cc` module itself *includes* the
+[standard](./standard) directory, which contains a handful of common
+YANG schema assets:
+
+name | description | reference
+--- | --- | ---
+[complex-types](standard/complex-types.yang) | extensions to model complex types and typed instance identifiers | RFC-6095
+[iana-crypt-hash](standard/iana-crypt-hash.yang) | typedef for storing passwords using a hash function | RFC-7317
+[ietf-inet-types](standard/ietf-inet-types.yang) | collection of generally useful types for Internet addresses | RFC-6991
+[ietf-yang-types](standard/ietf-yang-types.yang) | collection of generally useful derived data types | RFC-6991
+
+This is purely a convenience reference so that such assets do not need
+to be present inside the project directory where new YANG schemas are
+being composed.
+
+Please note that the `compose` method only accepts *filenames*. If you
+want to pass in *string* content of the schema(s) and/or
+specification(s), use the `load` method as described below.
+
+This call returns a new Core instance.
 
 ### include (dir...)
 
@@ -126,43 +163,6 @@ during respective schema compilation.
 
 This call returns the current Composer instance for call chaining
 purposes.
-
-### compose (file...)
-
-This is the **primary** method for passing in various *filenames* to
-the `Composer` for producing a newly compiled `Core` containing one or
-more *schemas* and *specifications* along with their **dependencies**.
-
-The ability to dynamically discover **dependencies** from the local
-filesystem search path is one of the key capabilities provided by the
-`yang-cc` module over the
-[yang-js](https://github.com/saintkepha/yang-js).
-
-By referencing various `include` directories prior to issuing the
-`compose` method, any *include* and *import* statements found within
-the schema(s) being composed will be dynamically located and if found,
-compiled and bundled as part of the resulting `Core`.
-
-For example, the `yang-cc` module itself *includes* the
-[standard](./standard) directory, which contains a handful of common
-YANG schema assets:
-
-name | description | reference
---- | --- | ---
-[complex-types](standard/complex-types.yang) | extensions to model complex types and typed instance identifiers | RFC-6095
-[iana-crypt-hash](standard/iana-crypt-hash.yang) | typedef for storing passwords using a hash function | RFC-7317
-[ietf-inet-types](standard/ietf-inet-types.yang) | collection of generally useful types for Internet addresses | RFC-6991
-[ietf-yang-types](standard/ietf-yang-types.yang) | collection of generally useful derived data types | RFC-6991
-
-This is purely a convenience reference so that such assets do not need
-to be present inside the project directory where new YANG schemas are
-being composed.
-
-Please note that the `compose` method only accepts *filenames*. If you
-want to pass in *string* content of the schema(s) and/or
-specification(s), use the `load` method as described below.
-
-This call returns a new Core instance.
 
 ### load / use / resolve / compile / etc...
 
