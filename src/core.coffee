@@ -34,14 +34,11 @@ class Core extends yang.Yang
     res = (new Buffer res).toString 'base64'
     """
     composition {
-      type #{opts.format};
       source \"#{res}\";
     }
     """
 
-  serialize: -> @get()
-
-  ## OVERRIDES
   attach: -> super; @emit 'attach', arguments...
+  serialize: -> @get()
 
 module.exports = Core

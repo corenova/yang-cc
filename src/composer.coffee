@@ -17,7 +17,10 @@ class Composer extends yang.Yin
       composition:
         type:   '1'
         source: '1'
-        construct: (arg, params) -> params # pass-through wrapper
+        construct: (arg, params, children, ctx) ->
+          console.debug? "passing through contents of composition"
+          @copy ctx, children
+          undefined
       source:
         argument: 'data'
         preprocess: (arg, params, ctx) ->
