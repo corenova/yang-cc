@@ -27,6 +27,7 @@ class Composer extends yang.Yin
           data = (new Buffer arg, 'base64').toString 'binary'
           { schema } = yang.preprocess data, this
           @copy ctx, schema
+          delete ctx.source # no longer needed
 
     @includes = new SearchPath basedir: __dirname, exts: [ 'yaml', 'yml', 'yang' ]
     @links    = new SearchPath basedir: __dirname, exts: [ 'js', 'coffee' ]
