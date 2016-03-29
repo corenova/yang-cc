@@ -12,28 +12,28 @@ class Composer extends yang.Yin
   # symbolic resolution
   constructor: (origin=yang) ->
     super origin
-    # TODO: prevent pulling the entire 'extension' obj into current @map
-    @define 'extension',
-      composition:
-        type:   '1'
-        source: '1'
-        construct: (arg, params, children, ctx) ->
-          console.debug? "passing through contents of composition"
-          @copy ctx, children
-          undefined
-      source:
-        argument: 'data'
-        preprocess: (arg, params, ctx) ->
-          data = (new Buffer arg, 'base64').toString 'binary'
-          { schema } = yang.preprocess data, this
-          @copy ctx, schema
-          delete ctx.source # no longer needed
-
     @includes = new SearchPath basedir: __dirname, exts: [ 'yaml', 'yml', 'yang' ]
     @links    = new SearchPath basedir: __dirname, exts: [ 'js', 'coffee' ]
     if origin instanceof Composer
       @includes.include origin.includes...
       @links.include origin.links...
+    else
+      # TODO: consider making these part of yang-core-composer spec
+      @define 'extension', 'composition',
+          type:   '1'
+          source: '1'
+          construct: (arg, params, children, ctx) ->
+            console.debug? "passing through contents of composition"
+            @copy ctx, children
+            undefined
+      @define 'extension', 'source',
+          argument: 'data'
+          preprocess: (arg, params, ctx) ->
+            data = (new Buffer arg, 'base64').toString 'binary'
+            { schema } = yang.preprocess data, this
+            @copy ctx, schema
+            delete ctx.source # no longer needed
+
 
   # register spec/schema search directories (exists)
   include: ->

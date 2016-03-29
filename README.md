@@ -29,7 +29,6 @@ questions, suggestions, etc.
 ```bash
 $ npm install -g yang-cc
 ```
-
 You must have `node >= 0.10.28` as a minimum requirement to use
 `yang-cc`.
 
