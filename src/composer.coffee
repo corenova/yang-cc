@@ -20,20 +20,21 @@ class Composer extends yang.Yin
     else
       # TODO: consider making these part of yang-core-composer spec
       @define 'extension', 'composition',
-          type:   '1'
-          source: '1'
-          construct: (arg, params, children, ctx) ->
-            console.debug? "passing through contents of composition"
-            @copy ctx, children
-            undefined
+        module: '0..n'
+        specification: '0..n'
+        feature: '0..n'
+        source: '1'
+        construct: (arg, params, children, ctx) ->
+          console.debug? "passing through contents of composition"
+          @copy ctx, children
+          undefined
       @define 'extension', 'source',
-          argument: 'data'
-          preprocess: (arg, params, ctx) ->
-            data = (new Buffer arg, 'base64').toString 'binary'
-            { schema } = yang.preprocess data, this
-            @copy ctx, schema
-            delete ctx.source # no longer needed
-
+        argument: 'data'
+        preprocess: (arg, params, ctx) ->
+          data = (new Buffer arg, 'base64').toString 'binary'
+          { schema } = yang.preprocess data, this
+          @copy ctx, schema
+          delete ctx.source # no longer needed
 
   # register spec/schema search directories (exists)
   include: ->
@@ -73,21 +74,24 @@ class Composer extends yang.Yin
 
     match = super keys..., warn: false
     match ?= switch
-      when keys[0] is 'module'
+      when 'module' is keys[0]
         @use (@includes.fetch keys[1])...
         super keys..., recurse: false
-      when keys[0] in [ 'feature', 'rpc' ] and opts.module?
-        [ type, key ] = keys
-        loc = (@links.resolve "#{opts.module}/#{type}/#{key}")[0]
-        @set type, key, switch
+      when 'feature' is keys[0] and opts.module?
+        loc = (@links.resolve [opts.module].concat(keys).join '/')[0]
+        @set keys..., switch
           when loc?
             res = require loc
             res.__origin__ = loc
             res
           else
-            console.debug? "unable to resolve '#{opts.module}/#{type}/#{key}'"
+            console.debug? "unable to resolve '#{opts.module}/#{keys.join '/'}'"
             {}
         super keys..., recurse: false
+      when 'rpc' is keys[0] and opts.module?
+        loc = (@links.resolve [opts.module].concat(keys).join '/')[0]
+        # TODO: should 'browserify' require loc and save it in 'specification'
+        require loc if loc?
     return match
 
 module.exports = Composer
