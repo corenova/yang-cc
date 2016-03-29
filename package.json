@@ -1,6 +1,6 @@
 {
   "name": "yang-cc",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "YANG model-driven application core composer - ycc",
   "keywords": [
     "core",
