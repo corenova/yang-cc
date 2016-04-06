@@ -1,0 +1,27 @@
+# YANG Composition Specifications
+
+specification:
+  yang-composition:
+    # setting below 'global' to true makes the below definitions
+    # available to ALL modules
+    global: true
+
+    extension:
+      composition:
+        module: 0..n
+        specification: 0..n
+        feature: 0..n
+        source: 1
+        construct: !coffee/function |
+          (arg, params, children, ctx) ->
+            console.debug? "passing through contents of composition"
+            @copy ctx, children
+            undefined
+
+      source:
+        preprocess: !coffee/function |
+          (arg, params, ctx, compiler) ->
+            data = (new Buffer arg, 'base64').toString 'binary'
+            { schema } = compiler.preprocess data, this
+            @copy ctx, schema
+            delete ctx.source

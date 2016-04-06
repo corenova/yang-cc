@@ -12,10 +12,13 @@ schema file(s) in the local filesystem.
   [![NPM Version][npm-image]][npm-url]
   [![NPM Downloads][downloads-image]][downloads-url]
 
-The core composer produces a new YANG language extension output called
-`composition` which contains a `source` to base64 encoded data with
-the generated results. It basically generates **portable** compiled
-output which contains one or more schema(s) and specification(s). The
+The core composer utilizes a new YANG language extension called
+`composition` which contains a `source` definition to base64 encoded
+data with the generated results.  The new YANG language extensions are
+defined in [yang-composition.yang](./yang-composition.yang) schema and
+implemented in [yang-composition.yaml](./yang-composition.yaml)
+specification. It basically generates **portable** compiled output
+which contains one or more schema(s) and specification(s). The
 generated output can then be sent across the wire and *loaded* by
 another instance of the `Composer` to re-create the identical instance
 of the core.
@@ -62,16 +65,17 @@ var core =
     .set({ basedir: __dirname })
     .include('./some-local-dir')
     .link('./other-local-dir')
-    .compose('foo.yang','bar.yang');
+    .load('foo.yang','bar.yang');
 
 console.log(core.dump());
 ```
 
-### compose (file...)
+### load (file/schema...)
 
-This is the **primary** method for passing in various *filenames* to
-the `Composer` for producing a newly compiled `Core` containing one or
-more *schemas* and *specifications* along with their **dependencies**.
+This is the **primary** method for passing in various *filenames* as
+well as schema object/string to the `Composer` for producing a newly
+compiled `Core` containing one or more *schemas* and *specifications*
+along with their **dependencies**.
 
 The ability to dynamically discover **dependencies** from the local
 filesystem search path is one of the key capabilities provided by the
@@ -79,7 +83,7 @@ filesystem search path is one of the key capabilities provided by the
 [yang-js](https://github.com/saintkepha/yang-js).
 
 By referencing various `include` directories prior to issuing the
-`compose` method, any *include* and *import* statements found within
+`load` method, any *include* and *import* statements found within
 the schema(s) being composed will be dynamically located and if found,
 compiled and bundled as part of the resulting `Core`.
 
@@ -97,10 +101,6 @@ name | description | reference
 This is purely a convenience reference so that such assets do not need
 to be present inside the project directory where new YANG schemas are
 being composed.
-
-Please note that the `compose` method only accepts *filenames*. If you
-want to pass in *string* content of the schema(s) and/or
-specification(s), use the `load` method as described below.
 
 This call returns a new Core instance.
 
@@ -139,7 +139,7 @@ Here's an example (coffeescript):
 ycc = require 'yang-cc'
 core = ycc
   .link './lib'
-  .compose 'foo.yang', 'bar.yang'
+  .load 'foo.yang', 'bar.yang'
 ```
 
 If `foo.yang` schema contains references to `feature example { ... }`
@@ -163,7 +163,16 @@ during respective schema compilation.
 This call returns the current Composer instance for call chaining
 purposes.
 
-### load / use / resolve / compile / etc...
+### use / resolve
+
+The `Composer` provides similar `use/resolve` capabilities *inherited*
+from the underlying [yang-js](https://github.com/saintkepha/yang-js)
+parser/compiler module.  The key differences are that the `use` also
+performs *filename* resolution by searching the `includes` directories
+and that the `resolve` attempts to dynamically resolve missing
+definitions from the local filesystem.
+
+### compile / preprocess / parse / ...
 
 The `yang-cc` module extends the
 [yang-js](https://github.com/saintkepha/yang-js) parser/compiler

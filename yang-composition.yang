@@ -1,0 +1,31 @@
+module yang-composition {
+  prefix yc;
+
+  organization
+    "Corenova R&D Group";
+
+  contact
+    "Web:  <http://www.corenova.com>
+     Code: <http://github.com/corenova/yang-cc>
+
+     Author: Peter K. Lee <mailto:peter@corenova.com>";
+
+  description
+    "This module provides YANG multi-schema composition";
+
+  revision 2016-04-06 {
+    description "Initial Version";
+  }
+  
+  extension composition {
+    description
+      "Defines a block of one or more specification(s) and module(s) being combined into a singular bundle.";
+  }
+
+  extension source {
+    argument value;
+    description
+      "Contains the serialized data of the composition";
+    yin-element true;
+  }
+}

@@ -26,7 +26,7 @@ var core = require('..')
   .set({ basedir: cwd })
   .include(cwd, argv.include)
   .link(cwd, argv.link)
-  .compose(argv._)
+  .load(argv._)
 
 var output = core.dump(argv)
 if (argv.o != null) {

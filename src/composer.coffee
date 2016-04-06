@@ -17,24 +17,7 @@ class Composer extends yang.Yin
     if origin instanceof Composer
       @includes.include origin.includes...
       @links.include origin.links...
-    else
-      # TODO: consider making these part of yang-core-composer spec
-      @define 'extension', 'composition',
-        module: '0..n'
-        specification: '0..n'
-        feature: '0..n'
-        source: '1'
-        construct: (arg, params, children, ctx) ->
-          console.debug? "passing through contents of composition"
-          @copy ctx, children
-          undefined
-      @define 'extension', 'source',
-        argument: 'data'
-        preprocess: (arg, params, ctx) ->
-          data = (new Buffer arg, 'base64').toString 'binary'
-          { schema } = yang.preprocess data, this
-          @copy ctx, schema
-          delete ctx.source # no longer needed
+    @set basedir: undefined, pattern: /^[\s_-\w\.\/\\]+$/
 
   # register spec/schema search directories (exists)
   include: ->
@@ -50,20 +33,25 @@ class Composer extends yang.Yin
       .include ([].concat arguments...)
     return this
 
-  # accepts: core/schema/spec file locations
-  # returns: a new Core object
-  compose: ->
-    @load (@includes.fetch ([].concat arguments...))
-
-  ## OVERRIDES
-
-  # accepts: core/schema/spec objects and strings
+  # accepts: core/schema/spec locations, objects and strings
   # returns: a new Core object
   load: ->
     input = [].concat arguments...
     unless input.length > 0
       throw @error "no input schema(s) to load"
     new Core ((new Composer this).use input)
+
+  # process variadic arguments and defines results inside current
+  # Composer instance
+  #
+  # accepts: core/schema/spec locations, objects and strings
+  # returns: current Composer instance
+  use: ->
+    input = ([].concat arguments...).map (x) =>
+      if typeof x is 'string' and (@resolve 'pattern').test x
+        @includes.fetch x
+      else x
+    super input...
 
   # extends resolve to attempt to generate missing symbols
   resolve: (keys..., opts={}) ->
@@ -74,8 +62,8 @@ class Composer extends yang.Yin
 
     match = super keys..., warn: false
     match ?= switch
-      when 'module' is keys[0]
-        @use (@includes.fetch keys[1])...
+      when keys[0] in [ 'module', 'submodule' ]
+        @use keys[1]
         super keys..., recurse: false
       when 'feature' is keys[0] and opts.module?
         loc = (@links.resolve [opts.module].concat(keys).join '/')[0]
