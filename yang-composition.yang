@@ -22,10 +22,10 @@ module yang-composition {
       "Defines a block of one or more specification(s) and module(s) being combined into a singular bundle.";
   }
 
-  extension source {
-    argument value;
+  extension package {
+    argument text;
     description
-      "Contains the serialized data of the composition";
+      "Contains the serialized data of the schema object to be extracted into the containing block";
     yin-element true;
   }
 }

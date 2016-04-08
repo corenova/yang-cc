@@ -11,17 +11,21 @@ specification:
         module: 0..n
         specification: 0..n
         feature: 0..n
-        source: 1
+        package: 0..n
         construct: !coffee/function |
           (arg, params, children, ctx) ->
             console.debug? "passing through contents of composition"
             @copy ctx, children
             undefined
 
-      source:
+      package:
+        parent-scope:
+          module:        0..1
+          specification: 0..1
+          feature:       0..1
         preprocess: !coffee/function |
           (arg, params, ctx, compiler) ->
             data = (new Buffer arg, 'base64').toString 'binary'
             { schema } = compiler.preprocess data, this
             @copy ctx, schema
-            delete ctx.source
+            delete ctx.package

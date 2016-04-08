@@ -18,6 +18,8 @@ class Composer extends yang.Yin
       @includes.include origin.includes...
       @links.include origin.links...
     @set basedir: undefined, pattern: /^[\s_-\w\.\/\\]+$/
+    @define 'extension', 'specification',
+      represent: (arg, obj, opts) -> "specification #{arg};"
 
   # register spec/schema search directories (exists)
   include: ->
@@ -40,6 +42,12 @@ class Composer extends yang.Yin
     unless input.length > 0
       throw @error "no input schema(s) to load"
     new Core ((new Composer this).use input)
+
+  dump: (obj, space=2) ->
+    switch
+      when obj instanceof Core
+        super composition: (obj.origin.extract 'specification', 'module'), space
+      else super
 
   # process variadic arguments and defines results inside current
   # Composer instance
