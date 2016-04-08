@@ -13,9 +13,11 @@ schema file(s) in the local filesystem.
   [![NPM Downloads][downloads-image]][downloads-url]
 
 The core composer utilizes a new YANG language extension called
-`composition` which contains a `source` definition to base64 encoded
-data with the generated results.  The new YANG language extensions are
-defined in [yang-composition.yang](./yang-composition.yang) schema and
+`composition` which contains one or more `specification` and `module`
+extensions and a new `extracts` extension to base64 encoded data with
+the generated results for the `specification`.  The new YANG language
+extensions are defined in
+[yang-composition.yang](./yang-composition.yang) schema and
 implemented in [yang-composition.yaml](./yang-composition.yaml)
 specification. It basically generates **portable** compiled output
 which contains one or more schema(s) and specification(s). The
