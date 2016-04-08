@@ -12,20 +12,21 @@ specification:
   complex-types:
     extension:
       complex-type:
-        abstract:      0..1
-        container:     0..n
-        description:   0..1
-        extends:       0..1
-        grouping:      0..n
-        if-feature:    0..n
-        key:           0..1
-        instance:      0..n
-        instance-list: 0..n
-        leaf:          0..n
-        leaf-list:     0..n
-        reference:     0..1
-        refine:        0..n
-        uses:          0..n
+        scope:
+          abstract:      0..1
+          container:     0..n
+          description:   0..1
+          extends:       0..1
+          grouping:      0..n
+          if-feature:    0..n
+          key:           0..1
+          instance:      0..n
+          instance-list: 0..n
+          leaf:          0..n
+          leaf-list:     0..n
+          reference:     0..1
+          refine:        0..n
+          uses:          0..n
         parent-scope:
           module:    0..n
           submodule: 0..n
@@ -55,9 +56,10 @@ specification:
       abstract:
 
       extends:
-        description: 0..1
-        reference:   0..1
-        status:      0..1
+        scope:
+          description: 0..1
+          reference:   0..1
+          status:      0..1
         preprocess: !coffee/function |
           (arg, params, ctx) ->
             ctx.extends = @resolve 'complex-type', arg
@@ -69,23 +71,24 @@ specification:
             null
 
       instance:
-        augment:       0..n
-        choice:        0..n
-        config:        0..1
-        container:     0..n
-        description:   0..1
-        if-feature:    0..n
-        instance:      0..n
-        instance-list: 0..n
-        instance-type: 1
-        leaf:          0..n
-        leaf-list:     0..n
-        list:          0..n
-        mandatory:     0..1
-        must:          0..n
-        reference:     0..1
-        status:        0..1
-        when:          0..1
+        scope:
+          augment:       0..n
+          choice:        0..n
+          config:        0..1
+          container:     0..n
+          description:   0..1
+          if-feature:    0..n
+          instance:      0..n
+          instance-list: 0..n
+          instance-type: 1
+          leaf:          0..n
+          leaf-list:     0..n
+          list:          0..n
+          mandatory:     0..1
+          must:          0..n
+          reference:     0..1
+          status:        0..1
+          when:          0..1
         parent-scope:
           module:    0..n
           submodule: 0..n
@@ -101,24 +104,25 @@ specification:
             ((synth Model) params).bind children
 
       instance-list:
-        augment: 0..n
-        choice: 0..n
-        config: 0..1
-        container: 0..n
-        description: 0..1
-        if-feature: 0..n
-        instance: 0..n
-        instance-list: 0..n
-        instance-type: 1
-        leaf: 0..n
-        leaf-list: 0..n
-        list: 0..n
-        min-elements: 0..n
-        max-elements: 0..n
-        must: 0..n
-        reference: 0..1
-        status: 0..1
-        when: 0..1
+        scope:
+          augment: 0..n
+          choice: 0..n
+          config: 0..1
+          container: 0..n
+          description: 0..1
+          if-feature: 0..n
+          instance: 0..n
+          instance-list: 0..n
+          instance-type: 1
+          leaf: 0..n
+          leaf-list: 0..n
+          list: 0..n
+          min-elements: 0..n
+          max-elements: 0..n
+          must: 0..n
+          reference: 0..1
+          status: 0..1
+          when: 0..1
         parent-scope:
           module:    0..n
           submodule: 0..n

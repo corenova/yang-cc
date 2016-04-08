@@ -18,8 +18,6 @@ class Composer extends yang.Yin
       @includes.include origin.includes...
       @links.include origin.links...
     @set basedir: undefined, pattern: /^[\s_-\w\.\/\\]+$/
-    @define 'extension', 'specification',
-      represent: (arg, obj, opts) -> "specification #{arg};"
 
   # register spec/schema search directories (exists)
   include: ->

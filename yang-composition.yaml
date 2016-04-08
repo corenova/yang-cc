@@ -8,24 +8,30 @@ specification:
 
     extension:
       composition:
-        module: 0..n
-        specification: 0..n
-        feature: 0..n
-        package: 0..n
+        scope:
+          module: 0..n
+          specification: 0..n
+          feature: 0..n
+          extracts: 0..n
         construct: !coffee/function |
           (arg, params, children, ctx) ->
             console.debug? "passing through contents of composition"
             @copy ctx, children
             undefined
 
-      package:
-        parent-scope:
-          module:        0..1
-          specification: 0..1
-          feature:       0..1
+      extracts:
         preprocess: !coffee/function |
           (arg, params, ctx, compiler) ->
             data = (new Buffer arg, 'base64').toString 'binary'
             { schema } = compiler.preprocess data, this
             @copy ctx, schema
-            delete ctx.package
+            delete ctx.extracts
+
+      specification:
+        scope:
+          extracts: 0..1
+        represent: !coffee/function |
+          (arg, obj, opts) -> 
+            serialize = @resolve 'serializer'
+            data = extracts: (serialize obj, format: 'yaml', encoding: 'base64')
+            "specification #{arg} {#{@dump data, opts}}"

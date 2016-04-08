@@ -27,20 +27,6 @@ class Core extends yang.Yang
       "cannot run with requested feature '#{feature}' (not found in the core)"
     @[feature] = f.apply this, args
 
-  dump: ->
-    return super
-
-    # force opts defaults (for now)
-    opts.format = 'binary'
-    res = super
-
-    res = (new Buffer res).toString 'base64'
-    """
-    composition {
-      source \"#{res}\";
-    }
-    """
-
   attach: -> super; @emit 'attach', arguments...
   serialize: -> @get()
 
