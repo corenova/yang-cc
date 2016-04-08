@@ -27,6 +27,8 @@ class Core extends yang.Yang
       "cannot run with requested feature '#{feature}' (not found in the core)"
     @[feature] = f.apply this, args
 
+  dump: (opts={}) -> @origin.set opts.meta; super opts.space
+
   attach: -> super; @emit 'attach', arguments...
   serialize: -> @get()
 

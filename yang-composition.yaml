@@ -9,10 +9,14 @@ specification:
     extension:
       composition:
         scope:
-          module: 0..n
+          extracts: 0..n
+          contact: 0..1
+          description: 0..1
+          organization: 0..1
+          reference: 0..1
           specification: 0..n
           feature: 0..n
-          extracts: 0..n
+          module: 0..n
         construct: !coffee/function |
           (arg, params, children, ctx) ->
             console.debug? "passing through contents of composition"

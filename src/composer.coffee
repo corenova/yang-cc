@@ -41,11 +41,14 @@ class Composer extends yang.Yin
       throw @error "no input schema(s) to load"
     new Core ((new Composer this).use input)
 
-  dump: (obj, space=2) ->
-    switch
+  dump: (obj, rest...) ->
+    ext = @resolve 'extension', 'composition'
+    obj = switch
+      when not ext? then obj
       when obj instanceof Core
-        super composition: (obj.origin.extract 'specification', 'module'), space
-      else super
+        composition: obj.origin.extract Object.keys(ext.scope)
+      else obj
+    super obj, rest...
 
   # process variadic arguments and defines results inside current
   # Composer instance
