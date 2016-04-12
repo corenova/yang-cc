@@ -22,10 +22,15 @@ module yang-composition {
       "Defines a block of one or more specification(s) and module(s) being combined into a singular bundle.";
   }
 
-  extension extracts {
-    argument text;
+  extension link-rpc {
+    argument rpc-node;
     description
-      "Contains the serialized data of the schema object to be extracted into the containing block";
-    yin-element true;
+      "Defines a source link that implements a given module's rpc operation";
+  }
+
+  extension link-notification {
+    argument notification-node;
+    description
+      "Defines a source link that implements a given module's notification operation";
   }
 }

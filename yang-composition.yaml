@@ -9,33 +9,20 @@ specification:
     extension:
       composition:
         scope:
-          extracts: 0..n
           contact: 0..1
           description: 0..1
           organization: 0..1
           reference: 0..1
           specification: 0..n
           feature: 0..n
+          link: 0..n
           module: 0..n
         construct: !coffee/function |
           (arg, params, children, ctx) ->
-            console.debug? "passing through contents of composition"
+            # pass-through contents of composition
             @copy ctx, children
             undefined
 
-      extracts:
-        preprocess: !coffee/function |
-          (arg, params, ctx, compiler) ->
-            data = (new Buffer arg, 'base64').toString 'binary'
-            { schema } = compiler.preprocess data, this
-            @copy ctx, schema
-            delete ctx.extracts
-
-      specification:
+      link:
         scope:
-          extracts: 0..1
-        represent: !coffee/function |
-          (arg, obj, opts) -> 
-            serialize = @resolve 'serializer'
-            data = extracts: (serialize obj, format: 'yaml', encoding: 'base64')
-            "specification #{arg} {#{@dump data, opts}}"
+          value: 0..1
