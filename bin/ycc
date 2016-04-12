@@ -22,15 +22,15 @@ if (argv.h === true) {
 }
 
 var cwd = process.cwd()
-var core = require('..')
+require('..')
   .set({ basedir: cwd })
   .include(cwd, argv.include)
   .link(cwd, argv.link)
-  .load(argv._)
-
-var output = core.dump()
-if (argv.o != null) {
-  require('fs').writeFile(argv.o, output, 'utf8');
-} else {
-  console.info(output);
-}
+  .load(argv._) // returns a new Core
+  .dump().then( function (str) {
+	if (argv.o != null) {
+	  require('fs').writeFile(argv.o, str, 'utf8');
+	} else {
+	  console.info(str);
+	}
+  })

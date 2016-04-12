@@ -25,9 +25,10 @@
     "ycc": "bin/ycc"
   },
   "dependencies": {
+    "browserify": "^13.0.0",
     "minimist": "^1.2.0",
     "search-path": "^1.0.4",
-    "yang-js": "^0.12.53"
+    "yang-js": "^0.12.54"
   },
   "devDependencies": {
     "mocha": "~2.0.1",
