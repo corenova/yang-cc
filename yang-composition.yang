@@ -22,15 +22,9 @@ module yang-composition {
       "Defines a block of one or more specification(s) and module(s) being combined into a singular bundle.";
   }
 
-  extension link-rpc {
-    argument rpc-node;
+  extension link-action {
+    argument target-action-node;
     description
-      "Defines a source link that implements a given module's rpc operation";
-  }
-
-  extension link-notification {
-    argument notification-node;
-    description
-      "Defines a source link that implements a given module's notification operation";
+      "Defines a source link that implements a given module's action operation (rpc, notification)";
   }
 }

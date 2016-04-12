@@ -9,20 +9,32 @@ specification:
     extension:
       composition:
         scope:
-          contact: 0..1
-          description: 0..1
-          organization: 0..1
-          reference: 0..1
+          contact:       0..1
+          description:   0..1
+          organization:  0..1
+          reference:     0..1
           specification: 0..n
-          feature: 0..n
-          link: 0..n
-          module: 0..n
+          link-action:   0..n
+          module:        0..n
         construct: !coffee/function |
           (arg, params, children, ctx) ->
-            # pass-through contents of composition
+            # passing through contents of composition
             @copy ctx, children
             undefined
 
-      link:
+      link-action:
         scope:
           value: 0..1
+        preprocess: !coffee/function |
+          (arg, params, ctx, compiler) ->
+            if params.value?
+              data = (new Buffer params.value, 'base64').toString 'binary'
+              { params } = compiler.preprocess data, this
+            @origin.define 'link', arg, params
+        represent: !coffee/function |
+          (arg, obj, opts) -> 
+            # obj should be string?
+            data = "!!js/function |\n"+obj
+            data = (new Buffer data).toString 'base64'
+            "link-action #{arg} {#{@dump value: data, opts}}"
+

@@ -7,16 +7,24 @@ composition/compilation.
 
 It provides a useful abstraction on top of
 [yang-js](http://github.com/saintkepha/yang-js) for dealing with
-schema file(s) in the local filesystem.
+schema file(s) in the local filesystem and generating `composition`
+schema output which provides **portable** YANG *multi-schema*
+snapshots.
 
   [![NPM Version][npm-image]][npm-url]
   [![NPM Downloads][downloads-image]][downloads-url]
 
 The core composer utilizes a new YANG language extension called
 `composition` which contains one or more `specification` and `module`
-extensions and a new `extracts` extension to base64 encoded data with
-the generated results for the `specification`.  The new YANG language
-extensions are defined in
+extensions.  The new `composition` extension is used to represent a
+multi-schema YANG module dependencies along with `specification`
+extensions capturing base64 encoded `value` that contains
+implementation code snippets.  Also, another new YANG language
+extension called `link` is introduced which allows any dynamically
+discovered/resolved implementation code to be embedded into the
+generated `composition` output.
+
+These new YANG language extensions are defined in
 [yang-composition.yang](./yang-composition.yang) schema and
 implemented in [yang-composition.yaml](./yang-composition.yaml)
 specification. It basically generates **portable** compiled output

@@ -74,25 +74,26 @@ class Composer extends yang.Yin
       when 'module', 'submodule'
         @use keys[1]
         super keys..., recurse: false
-      when 'feature'
+        
+      when 'feature' # global scope (does not get bundled)
+        loc = (@links.resolve (keys.join ':'))[0]
+        break unless loc?
+        require loc
+        
+      when 'rpc', 'notification' # module scope (bundled as 'link-action')
         break unless opts.module?
-        target = [opts.module].concat(keys).join '/'
+        target = "#{opts.module}:#{keys[1]}"
         loc = (@links.resolve target)[0]
-        @set keys..., switch
-          when loc?
+        if loc?
+          try
             res = require loc
-            res.__origin__ = loc
+            @set @objectify "link-action.#{target}", (resolve, reject) =>
+              (browserify loc).bundle (err, buf) =>
+                if err? then reject err else resolve (@objectify target, buf)
             res
-          else
-            console.debug? "unable to resolve '#{target}'"
-            {}
-        super keys..., recurse: false
-      when 'rpc', 'notification'
-        break unless opts.module?
-        target = [opts.module].concat(keys).join '/'
-        loc = (@links.resolve target)[0]
-        # TODO: should 'browserify' require loc and save it in 'specification'
-        require loc if loc?
+          catch e then {}
+        else
+          @resolve "link-action", target, recurse: false
     return match
 
 module.exports = Composer
