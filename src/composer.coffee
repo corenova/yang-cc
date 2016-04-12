@@ -74,15 +74,15 @@ class Composer extends yang.Yin
       when 'module', 'submodule'
         @use keys[1]
         super keys..., recurse: false
-        
+
       when 'feature' # global scope (does not get bundled)
         loc = (@links.resolve (keys.join ':'))[0]
         break unless loc?
         require loc
-        
+
       when 'rpc', 'notification' # module scope (bundled as 'link-action')
         break unless opts.module?
-        target = "#{opts.module}:#{keys[1]}"
+        target = [opts.module].concat(keys).join ':'
         loc = (@links.resolve target)[0]
         if loc?
           try

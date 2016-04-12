@@ -35,7 +35,7 @@ class Core extends yang.Yang
   # returns: a new Promise for a serialized Core
   dump: (opts={}) ->
     objectify = @objectify
-    linkers = v for k, v of @origin.resolve 'link' when v instanceof Function
+    linkers = (v for k, v of @origin.resolve 'link' when v instanceof Function)
     @invoke linkers
     .then (res) =>
       @origin.set 'link', x for x in res
